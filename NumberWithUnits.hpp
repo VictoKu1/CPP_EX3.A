@@ -17,12 +17,9 @@ namespace ariel{
             static void read_units(ifstream& units_file);
             friend int convert (const NumberWithUnits& a,const NumberWithUnits& b);
             friend NumberWithUnits operator+(const NumberWithUnits& a,const NumberWithUnits& b);
-            friend NumberWithUnits operator+(const NumberWithUnits& a,const double b);
-            friend NumberWithUnits operator+(const double a,const NumberWithUnits& b);
+            friend NumberWithUnits operator+(const NumberWithUnits& a);
             friend NumberWithUnits operator+=(const NumberWithUnits& a,const NumberWithUnits& b);
             friend NumberWithUnits operator-(const NumberWithUnits& a,const NumberWithUnits& b);
-            friend NumberWithUnits operator-(const NumberWithUnits& a,const double b);
-            friend NumberWithUnits operator-(const double a,const NumberWithUnits& b);
             friend NumberWithUnits operator-(const NumberWithUnits& a);
             friend NumberWithUnits operator-=(const NumberWithUnits& a,const NumberWithUnits& b);
             friend bool operator<(const NumberWithUnits& a,const NumberWithUnits& b);
