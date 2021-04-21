@@ -81,14 +81,4 @@ TEST_CASE("Testing inequality signs.") {
   CHECK(m5 != m45);
   CHECK(m45 > m5);
   CHECK(m45 >= m5);
-  CHECK_THROWS(operator==(m5, ils5));
-  CHECK_THROWS(operator!=(m5, ils5));
-  CHECK_THROWS(operator!=(ils5, m5));
-  CHECK_THROWS(operator>(m45, ils5));
-  CHECK_THROWS(operator>=(m45, ils5));
-  CHECK_THROWS(operator<=(ils5, m45));
-  CHECK_THROWS(operator<(ils5, m45));
 }
-
-
-
