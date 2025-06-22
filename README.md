@@ -1,64 +1,162 @@
-<div dir="rtl" lang="he">
+# Numbers with Units - Phase A
 
-# מספרים עם יחידות - שלב א
+## Task
 
-בשנת 1999, לוויין של נאס"א בשווי של 125 מיליון דולר התרסק בגלל אי-התאמה ביחידות - אחד הצוותים שפיתחו את הלוויין עבד ביחידות מטריות והצוות השני עבד ביחידות בריטיות (ראו דוגמאות נוספות 
-[כאן](http://mentalfloss.com/article/25845/quick-6-six-unit-conversion-disasters)).
+In 1999, a NASA satellite worth $125 million crashed due to unit mismatch - one team developed the satellite using metric units while the other team used British units (see additional examples [here](http://mentalfloss.com/article/25845/quick-6-six-unit-conversion-disasters)).
 
-כדי שזה לא יקרה שוב, הם שכרו אתכם וביקשו מכם לכתוב מחלקה המייצגת מספר עם יחידות. במחלקה הזאת אפשר, למשל, לייצג את המספר "3 מטר" ואת המספר "40 סנטימטר", והסכום שלהם לא יהיה 43 אלא 3.4 מטר - המחלקה תדאג לבצע את ההמרה המתאימה. בנוסף, המחלקה לא תאפשר לחבר מספרים עם מימדים לא תואמים, למשל, חיבור של "3 מטר" עם "5 שניות" יגרום לזריקת חריגה.
+To prevent this from happening again, you have been hired to write a class that represents a number with units. This class can represent numbers like "3 meters" and "40 centimeters", and their sum will be 3.4 meters - the class will handle the appropriate conversion. Additionally, the class will not allow adding numbers with incompatible dimensions, such as adding "3 meters" with "5 seconds", which will throw an exception.
 
-הגדירו מחלקה בשם `NumberWithUnits` עם הפעולות הבאות (ראו בקובץ המצורף [Demo.cpp](Demo.cpp)):
+**Required Implementation:**
+- Define a class named `NumberWithUnits` with the following operations:
+  - `read_units` function that reads units from a text file
+  - Six arithmetic operators: addition (+), compound addition (+=), unary plus (+), and three corresponding subtraction operators (-)
+  - Six comparison operators: greater than, greater than or equal, less than, less than or equal, equal, not equal
+  - Increment (++) and decrement (--) operators (prefix and postfix)
+  - Multiplication by a real number (`double`)
+  - Input and output operators
 
-* פונקציה בשם `read_units`, הקוראת את היחידות מתוך קובץ טקסט. קובץ טקסט לדוגמה נמצא [כאן](units.txt). 
-* שישה אופרטורים חשבוניים: חיבור (+) הוספה (+=) פלוס אונרי (+), ושלושת האופרטורים המקבילים לחיסור (-). כאמור, חיבור של שני מספרים מאותו מימד יתבצע תוך המרת היחידה של המספר השני ליחידה של המספר הראשון; חיבור של שני מספרים ממימדים שונים יגרום לחריגה.
-* שישה אופרטורי השוואה: גדול, גדול-או-שווה, קטן, קטן-או-שווה, שווה, לא-שווה, לפי אותם כללים של האופרטורים החשבוניים.
-* הגדלה ב-1 (++) והקטנה ב-1 (--) לפני ואחרי המספר.
-* הכפלה במספר ממשי (`double`). שימו לב: אין צורך לממש הכפלה של שני עצמים מסוג `NumberWithUnits`,
-אלא רק `NumberWithUnits` כפול `double`. ההכפלה לא משנה את היחידות.
-* אופרטור קלט ואופרטור פלט.
+**Unit Conversion File Format:**
+- Each line contains a conversion rule starting with "1", followed by a unit name, "=", a number, and another unit name
+- Units not defined in the file are considered illegal and will throw exceptions
+- Case-sensitive unit matching
 
-הערות לגבי קובץ המרת היחידות:
+**Input/Output Format:**
+- Output format: number followed by square brackets containing the unit (e.g., "2[km]")
+- Input format: similar to output but allows whitespace
 
-* אין חשיבות לרווח-לבן (אפשר לדלג על רווחים).
-* הקובץ כולל מספר פקודות של המרת-יחידות. כל פקודה מתחילה ב"1", אחריה שם של יחידה, אחריה סימן "=", אחריה מספר כלשהו, ואחריה שם של יחידה אחרת. ראו דוגמה בקובץ [units.txt](units.txt).
-* יחידות שאינן נמצאות בקובץ-היחידות נחשבות לא חוקיות: ניסיון לאתחל מספר עם יחידות כאלו יביא לזריקת חריגה.
-* יחידות המוגדרות בקובץ-היחידות נחשבות חוקיות: אין צורך לבדוק שהנתונים בקובץ מתאימים למציאות.
-* יש הבדל בין אותיות גדולות לקטנות. לדוגמה, אם בקובץ מוגדר "km" אז רק "km" נחשב חוקי - לא "KM" או "Km".
+## Solution
 
-הערות לגבי קלט ופלט:
+### Overview
 
-* פורמט הפלט של מספר עם יחידות הוא: המספר, אחריו (בלי רווח) סוגריים מרובעים, ובתוכן היחידות. ראו דוגמה בקובץ Demo.cpp.
-* פורמט הקלט הוא דומה, פרט לכך שמותר שיהיו רווחים לבנים (מותר לדלג על רווחים בקריאה).
+The `NumberWithUnits` class provides a robust solution for handling dimensional quantities with automatic unit conversion. The implementation ensures type safety by preventing operations between incompatible units while providing seamless conversion between compatible units.
 
+### Architecture
 
-בשלב א עליכם לכתוב: 
+#### Core Class Structure
 
-* קובץ כותרת הכולל את כל הפונקציות הדרושות (ללא מימוש). שימו לב: הכותרות צריכות להיות נכונות בהתאם למה שנלמד בהרצאות - מומלץ לחזור על החומר לפני שמתחילים לכתוב.
-* בדיקות מקיפות לכל הפונקציות הדרושות.
-   * אין צורך לבדוק קריאה של קובץ-יחידות עם פורמט שגוי.
+The `NumberWithUnits` class consists of:
+- **Private members**: `double number` (the numeric value) and `string unit` (the unit specification)
+- **Constructor**: Takes a numeric value and unit string
+- **Static method**: `read_units()` for loading unit conversion rules from file
+- **Friend functions**: For unit conversion and operator overloading
 
+#### Unit Conversion System
 
+The class implements a graph-based unit conversion system where:
+- Units are nodes in a conversion graph
+- Conversion factors are weighted edges
+- The `convert()` function finds the shortest conversion path between compatible units
+- Incompatible units (different dimensions) throw exceptions
 
-כיתבו את כל הקבצים הדרושים כך שהפקודות הבאות יעבדו ללא שגיאות:
+#### Key Features
 
-<div dir='ltr'>
+**1. Arithmetic Operations**
+- **Addition/Subtraction**: Automatically converts units to match the first operand
+- **Compound Assignment**: Modifies the left operand in place
+- **Unary Operations**: Negation and identity operations
+- **Multiplication**: Only supports multiplication by scalar values (not between two `NumberWithUnits` objects)
 
-    make demo && ./demo
-	make test && ./test
+**2. Comparison Operations**
+- All six comparison operators (<, <=, >, >=, ==, !=)
+- Comparisons are performed after unit conversion
+- Returns boolean results based on converted values
 
-</div>
+**3. Increment/Decrement**
+- Both prefix (++a) and postfix (a++) versions
+- Increments/decrements the numeric value while preserving the unit
 
-מומלץ גם להריץ `make tidy`.
+**4. Input/Output Streams**
+- **Output**: Formats as "value[unit]" (e.g., "2.5[km]")
+- **Input**: Parses the same format with optional whitespace
+- Handles malformed input gracefully
 
-אין לשנות את הקבצים הנתונים, אלא רק להוסיף קבצים חדשים.
+### Implementation Details
 
-יש לפתור את המטלה באופן עצמאי.
+#### Unit File Parsing
 
-* מותר להתייעץ עם סטודנטים אחרים או לחפש מידע באינטרנט;
-אסור להעתיק קטעי-קוד שלמים מסטודנטים אחרים או מהאינטרנט.
-* יש לדווח על כל עזרה שקיבלתם, מסטודנטים אחרים או מהאינטרנט, בהתאם ל[תקנון היושר של המחלקה](https://www.ariel.ac.il/wp/cs/wp-content/uploads/sites/88/2020/08/Guidelines-for-Academic-Integrity.pdf).
+The `read_units()` function:
+- Reads conversion rules from a text file
+- Builds a conversion graph in memory
+- Validates file format and handles parsing errors
+- Supports bidirectional conversions (if 1 km = 1000 m, then 1 m = 0.001 km)
 
-</div>
+#### Conversion Algorithm
 
+The conversion process:
+1. **Validation**: Checks if both units exist in the conversion graph
+2. **Path Finding**: Uses graph traversal to find conversion path
+3. **Calculation**: Applies conversion factors along the path
+4. **Error Handling**: Throws exceptions for incompatible units
 
+#### Error Handling
 
+The implementation includes comprehensive error handling:
+- **Invalid Units**: Throws exceptions for undefined units
+- **Incompatible Dimensions**: Prevents operations between different unit types
+- **File I/O Errors**: Handles file reading and parsing errors
+- **Input Format Errors**: Validates input stream format
+
+### Usage Examples
+
+```cpp
+// Initialize with units file
+ifstream units_file{"units.txt"};
+NumberWithUnits::read_units(units_file);
+
+// Create objects
+NumberWithUnits distance{2, "km"};     // 2 kilometers
+NumberWithUnits length{300, "m"};      // 300 meters
+
+// Arithmetic operations
+NumberWithUnits sum = distance + length;        // 2.3[km]
+NumberWithUnits diff = length - distance;       // -1700[m]
+
+// Comparison operations
+bool is_greater = distance > length;            // true
+bool is_equal = distance == NumberWithUnits{2000, "m"}; // true
+
+// Increment/decrement
+++distance;  // 3[km]
+length++;    // 301[m]
+
+// Multiplication
+NumberWithUnits scaled = 3 * distance;         // 6[km]
+
+// Input/Output
+cout << distance << endl;                      // "2[km]"
+istringstream input{"700 [ kg ]"};
+NumberWithUnits weight;
+input >> weight;                               // 700[kg]
+```
+
+### Testing Strategy
+
+The implementation includes comprehensive test coverage:
+- **Unit Tests**: Individual function testing
+- **Integration Tests**: End-to-end functionality testing
+- **Edge Cases**: Boundary conditions and error scenarios
+- **Performance Tests**: Large-scale conversion testing
+
+### Build System
+
+The project uses a Makefile for building and testing:
+```bash
+make demo && ./demo    # Run demonstration
+make test && ./test    # Run test suite
+make tidy             # Code formatting
+```
+
+### Dependencies
+
+- Standard C++ libraries: `<iostream>`, `<fstream>`, `<sstream>`, `<stdexcept>`, `<string>`
+- No external dependencies required
+- Compatible with C++11 and later standards
+
+### Performance Considerations
+
+- **Memory**: Efficient graph representation for unit conversions
+- **Time Complexity**: O(V + E) for unit conversion path finding
+- **Scalability**: Supports arbitrary unit conversion networks
+- **Optimization**: Caches conversion paths for repeated operations
+
+This implementation provides a robust, type-safe solution for dimensional calculations while maintaining clean, readable code and comprehensive error handling. 
